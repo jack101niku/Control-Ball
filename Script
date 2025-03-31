@@ -312,9 +312,10 @@ end)
 -- Keyboard shortcuts: Y to toggle ascension, U to toggle control
 UserInputService.InputBegan:Connect(function(keyInput, isProcessed)
  if isProcessed then return end
- if keyInput.KeyCode == Enum.KeyCode.Y then
-  ascendButton.MouseButton1Click:Fire()
+  if keyInput.KeyCode == Enum.KeyCode.Y then
+   ascendButton:Activate()
  elseif keyInput.KeyCode == Enum.KeyCode.U then
-  controlButton.MouseButton1Click:Fire()
- end
+   controlButton:Activate()
+end
+
 end)
