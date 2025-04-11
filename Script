@@ -87,19 +87,6 @@ local function getFootball()
 end
 
 -- Continuous update for the local character while ascending
-RunService.Heartbeat:Connect(function()
-	if isAscending then
-		if humanoidRoot.Position.Y < ascendHeight then
-			humanoidRoot.Velocity = Vector3.new(0, 25, 0)
-		else
-			humanoidRoot.Velocity = Vector3.new(0, 100, 0)
-			local moveDir = humanoid.MoveDirection
-			if moveDir.Magnitude > 0 then
-				humanoidRoot.Position = humanoidRoot.Position + ((moveDir * movementFactor) / 10)
-			end
-		end
-	end
-end)
 
 -- Function to activate control mode on the football
 local function activateControl()
@@ -122,7 +109,7 @@ local function activateControl()
 
 	-- Create a new BodyVelocity to control the football.
 	local controlBodyVelocity = Instance.new("BodyVelocity")
-	controlBodyVelocity.MaxForce = Vector3.new(101, 1000, 107000) -- simplified constant values
+	controlBodyVelocity.MaxForce = Vector3.new(10000, 10000, 10000) -- simplified constant values
 	controlBodyVelocity.Parent = football
 
 	-- Connect a heartbeat to update the control velocity.
@@ -158,6 +145,9 @@ controlButton.MouseButton1Click:Connect(function()
 		controlButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 		controlFrame.Visible = true
 		activateControl()
+	else
+		controlButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+		controlFrame.Visible = false
 	end
 end)
 
