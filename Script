@@ -21,18 +21,10 @@ local loadedAnimation = animator:LoadAnimation(animationInstance)
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = localPlayer:WaitForChild("PlayerGui")
 
--- Ascend button (positioned top left)
-local ascendButton = Instance.new("TextButton")
-ascendButton.Size = UDim2.new(0.2, 0, 0.1, 0)             -- originally: (0.2, 0, 0.1, 0)
-ascendButton.Position = UDim2.new(0.02, 0, 0.2, 0)         -- originally: (0.02, 0, 0.2, 0)
-ascendButton.BackgroundColor3 = Color3.fromRGB(255, 94, 0)   -- computed from arithmetic: 722-467 = 255, etc.
-ascendButton.Text = "ASCEND"
-ascendButton.Parent = screenGui
-
 -- Control button (for toggling control mode)
 local controlButton = Instance.new("TextButton")
-controlButton.Size = UDim2.new(0.15, 0, 0.08, 0)
-controlButton.Position = UDim2.new(0.1, 0, 0.8, 0)
+controlButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+controlButton.Position = UDim2.new(0.02, 0, 0.2, 0)
 controlButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 controlButton.Text = "CONTROL"
 controlButton.Parent = screenGui
