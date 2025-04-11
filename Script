@@ -94,86 +94,6 @@ local function getFootball()
 	return Workspace:FindFirstChild("Football")
 end
 
--- Function to start the ascension process
-local function startAscension()
-	local state = 0
-	local angleAccumulator
-
-	while true do
-		-- State 0: Initialize ascension if a football exists and control mode is off.
-		if state == 0 then
-			if not football or isControlToggled then
-				return
-			end
-			angleAccumulator = 0
-			state = 1
-		end
-
-		-- State 1: Create a BodyVelocity instance with an initial upward velocity.
-		if state == 1 then
-			bodyVelocityInstance = Instance.new("BodyVelocity")
-			-- Set upward velocity (0 in X and Z)
-			bodyVelocityInstance.Velocity = Vector3.new(0, 25, 0)
-			state = 2
-		end
-
-		-- State 2: Configure BodyVelocity and attach it to the football.
-		if state == 2 then
-			bodyVelocityInstance.MaxForce = Vector3.new(4000, 4000, 4000)
-			bodyVelocityInstance.Parent = football
-			state = 3
-		end
-
-		-- State 3: Connect a Heartbeat event to update the football's movement.
-		if state == 3 then
-			velocityHeartbeatConnection = RunService.Heartbeat:Connect(function(deltaTime)
-				local phase = 0
-				local offsetX, offsetZ, targetPosition, directionUnit
-
-				while true do
-					-- Check if conditions have changed to cancel ascension.
-					if phase == 0 then
-						if (not isAscending) or (not football) or (not football.Parent) or isControlToggled then
-							-- Cleanup: Destroy BodyVelocity and disconnect heartbeat.
-							if bodyVelocityInstance then
-								bodyVelocityInstance:Destroy()
-								bodyVelocityInstance = nil
-							end
-							if velocityHeartbeatConnection then
-								velocityHeartbeatConnection:Disconnect()
-								velocityHeartbeatConnection = nil
-							end
-							return
-						end
-					end
-
-					-- Update the angle accumulator for oscillation.
-					angleAccumulator = angleAccumulator + (85 * deltaTime)
-
-					-- Phase 1: Calculate the offsets.
-					if phase == 0 then
-						offsetX = math.cos(angleAccumulator) * 5
-						offsetZ = math.sin(angleAccumulator) * 5
-						phase = 1
-					end
-
-					-- Phase 2: Calculate the target position and direction.
-					if phase == 1 then
-						-- The target Y is slightly above the ascension height.
-						targetPosition = Vector3.new(humanoidRoot.Position.X + offsetX, ascendHeight + 12, humanoidRoot.Position.Z + offsetZ)
-						directionUnit = (targetPosition - football.Position).unit
-						phase = 2
-					end
-
-					-- Phase 3: Apply the velocity to the football.
-					
-				end
-			end)
-			break
-		end
-	end
-end
-
 -- Continuous update for the local character while ascending
 RunService.Heartbeat:Connect(function()
 	if isAscending then
@@ -231,32 +151,6 @@ end
 
 -- Button click events
 
-ascendButton.MouseButton1Click:Connect(function()
-	if isAscending then
-		-- Stop ascension
-		isAscending = false
-		ascendButton.Text = "ASCEND"
-		loadedAnimation:Stop()
-		if velocityHeartbeatConnection then
-			velocityHeartbeatConnection:Disconnect()
-			velocityHeartbeatConnection = nil
-		end
-		if bodyVelocityInstance then
-			bodyVelocityInstance:Destroy()
-			bodyVelocityInstance = nil
-		end
-	else
-		-- Start ascension sequence
-		loadedAnimation:Play()
-		football = getFootball()
-		if football then
-			isAscending = true
-			ascendButton.Text = "STOP"
-			startAscension()
-		end
-	end
-end)
-
 controlButton.MouseButton1Click:Connect(function()
 	-- Toggle control mode
 	if not football then
@@ -272,8 +166,6 @@ controlButton.MouseButton1Click:Connect(function()
 		controlButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 		controlFrame.Visible = true
 		activateControl()
-	elseif isAscending then
-		startAscension()
 	end
 end)
 
@@ -309,10 +201,7 @@ end)
 -- Keyboard shortcuts: Y to toggle ascension, U to toggle control
 UserInputService.InputBegan:Connect(function(keyInput, isProcessed)
 	if isProcessed then return end
-	if keyInput.KeyCode == Enum.KeyCode.Y then
-		ascendButton:Activate()
-	elseif keyInput.KeyCode == Enum.KeyCode.U then
+	if keyInput.KeyCode == Enum.KeyCode.U then
 		controlButton:Activate()
 	end
-
 end)
